@@ -9,8 +9,11 @@ class UserInput(BaseModel):
     password: str
 
 
-class UserView(UserInput):
+class UserView(BaseModel):
     id: int
+    username: str
+    email: EmailStr
+    password: str
     register_date: date
 
 
