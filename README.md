@@ -1,7 +1,6 @@
 # UsersStorage
 API to store users
 # How to run
-pipenv install
 
 docker-compose build
 
