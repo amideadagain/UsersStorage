@@ -19,6 +19,9 @@ passlib = {extras = ["bcrypt"], version = "*"}
 [dev-packages]
 pytest = "*"
 requests = "*"
+asgi-lifespan = "*"
+httpx = "*"
+pytest-asyncio = "*"
 
 [requires]
 python_version = "3.9"

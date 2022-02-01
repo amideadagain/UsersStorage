@@ -1,42 +1,13 @@
-from sqlalchemy import Column, Integer, String, Date, Table
 from datetime import date
 from asyncpg.exceptions import UniqueViolationError
 
-from src.db import db, metadata
-from src.schema import UserInput, UserPatch
+from src.models.user.models import users
+from src.db import db
+from src.models.user.schema import UserInput, UserPatch
 from src.utils.hashing import bcrypt
 
 
-users = Table(
-    "users",
-    metadata,
-    Column("id", Integer, primary_key=True),
-    Column("username", String, unique=True),
-    Column("email", String, unique=True),
-    Column("password", String),
-    Column("register_date", Date),
-)
-
-
 class User:
-    # @classmethod
-    # async def username_exists(cls, username: str) -> bool:
-    #     query = users.select().where(users.c.username == username)
-    #     user = await db.fetch_one(query)
-    #     if user:
-    #         return True
-    #     else:
-    #         return False
-    #
-    # @classmethod
-    # async def email_exists(cls, email: str) -> bool:
-    #     query = users.select().where(users.c.email == email)
-    #     user = await db.fetch_one(query)
-    #     if user:
-    #         return True
-    #     else:
-    #         return False
-
     @classmethod
     async def get(cls, user_id: int):
         query = users.select().where(users.c.id == user_id)
@@ -76,14 +47,6 @@ class User:
         to_update = user.dict(exclude_unset=True)
         if to_update.get('password'):
             to_update['password'] = bcrypt(user.password)
-        # if to_update.get('username'):
-        #     username_exists = await cls.username_exists(to_update['username'])
-        #     if username_exists:
-        #         return {"message": "username already exists"}
-        # if to_update.get('email'):
-        #     email_exists = await cls.email_exists(to_update['email'])
-        #     if email_exists:
-        #         return {"message": "email already exists"}
 
         query = users.update().where(users.c.id == user_id).values(**to_update)
         try:
